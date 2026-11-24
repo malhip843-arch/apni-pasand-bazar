@@ -4,7 +4,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Apni Pasand Bazar</title>
+  <title>Apni Pasand Bazar | Online Shopping Pakistan</title>
   <link rel="stylesheet" href="style.css">
 </head>
 <body>
@@ -12,14 +12,18 @@
 <header>
   <h1>APNI PASAND BAZAR</h1>
   <p>Har cheez, aik hi jagah!</p>
-  <input type="search" id="search" placeholder="Search products...">
-  <button onclick="showCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+
+  <div class="header-actions">
+    <input type="search" id="search" placeholder="Search products...">
+    <button onclick="showCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+  </div>
 </header>
 
 <nav>
   <a href="#">Home</a>
   <a href="#categories">Categories</a>
   <a href="#products">Products</a>
+  <a href="#cart-section">My Cart</a>
   <a href="#contact">Contact</a>
 </nav>
 
@@ -46,9 +50,34 @@
   <div id="product-list" class="products"></div>
 </section>
 
+<section id="cart-section">
+  <h2>My Shopping Cart 🛒</h2>
+  <div id="cart-items"></div>
+  <h3 id="cart-total">Total: Rs. 0</h3>
+  <button onclick="checkout()">Proceed to Checkout</button>
+</section>
+
+<section id="checkout-section" style="display:none;">
+  <h2>Checkout</h2>
+
+  <form id="checkout-form">
+    <input id="customer-name" type="text"
+      placeholder="Your Full Name" required>
+
+    <input id="customer-phone" type="tel"
+      placeholder="Mobile Number" required>
+
+    <textarea id="customer-address"
+      placeholder="Complete Delivery Address" required></textarea>
+
+    <button type="submit">Place Order</button>
+  </form>
+</section>
+
 <section id="contact">
   <h2>Contact Us</h2>
   <p>Apni Pasand Bazar – Pakistan</p>
+  <p>Thank you for shopping with us!</p>
 </section>
 
 <footer>
