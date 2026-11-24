@@ -1,16 +1,61 @@
 
-// APNI PASAND BAZAR
-// Shopping Cart and Checkout System
-
 const products = [
-  {id:1, name:"Men's Stylish Shirt", price:1800, category:"Fashion", icon:"👕"},
-  {id:2, name:"Smartphone", price:25000, category:"Electronics", icon:"📱"},
-  {id:3, name:"Sports Shoes", price:3500, category:"Shoes", icon:"👟"},
-  {id:4, name:"Beauty Kit", price:2200, category:"Beauty", icon:"💄"},
-  {id:5, name:"Wrist Watch", price:4500, category:"Fashion", icon:"⌚"},
-  {id:6, name:"Headphones", price:3000, category:"Electronics", icon:"🎧"},
-  {id:7, name:"Home Decoration", price:1500, category:"Home", icon:"🏠"},
-  {id:8, name:"Grocery Pack", price:1200, category:"Grocery", icon:"🛒"}
+  {
+    id: 1,
+    name: "Men's Stylish Shirt",
+    price: 1800,
+    category: "Fashion",
+    image: "https://images.unsplash.com/photo-1596755094514-f87e34085b2c?w=600"
+  },
+  {
+    id: 2,
+    name: "Smartphone",
+    price: 25000,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1511707171634-5f897ff02aa9?w=600"
+  },
+  {
+    id: 3,
+    name: "Sports Shoes",
+    price: 3500,
+    category: "Shoes",
+    image: "https://images.unsplash.com/photo-1542291026-7eec264c27ff?w=600"
+  },
+  {
+    id: 4,
+    name: "Beauty Kit",
+    price: 2200,
+    category: "Beauty",
+    image: "https://images.unsplash.com/photo-1596462502278-27bfdc403348?w=600"
+  },
+  {
+    id: 5,
+    name: "Wrist Watch",
+    price: 4500,
+    category: "Fashion",
+    image: "https://images.unsplash.com/photo-1523275335684-37898b6baf30?w=600"
+  },
+  {
+    id: 6,
+    name: "Headphones",
+    price: 3000,
+    category: "Electronics",
+    image: "https://images.unsplash.com/photo-1505740420928-5e560c06d30e?w=600"
+  },
+  {
+    id: 7,
+    name: "Home Decoration",
+    price: 1500,
+    category: "Home",
+    image: "https://images.unsplash.com/photo-1600210492486-724fe5c67fb0?w=600"
+  },
+  {
+    id: 8,
+    name: "Grocery Pack",
+    price: 1200,
+    category: "Grocery",
+    image: "https://images.unsplash.com/photo-1542838132-92c53300491e?w=600"
+  }
 ];
 
 let cart = JSON.parse(localStorage.getItem("apniPasandCart")) || [];
@@ -24,12 +69,13 @@ function displayProducts(items) {
 
   list.innerHTML = items.map(product => `
     <div class="product-card">
-      <div class="product-icon">${product.icon}</div>
+      <img class="product-image"
+           src="${product.image}"
+           alt="${product.name}"
+           loading="lazy">
       <h3>${product.name}</h3>
       <p>Rs. ${product.price.toLocaleString("en-PK")}</p>
-      <button onclick="addToCart(${product.id})">
-        Add to Cart
-      </button>
+      <button onclick="addToCart(${product.id})">Add to Cart</button>
     </div>
   `).join("");
 
@@ -45,7 +91,7 @@ function addToCart(id) {
   if (existing) {
     existing.quantity++;
   } else {
-    cart.push({...product, quantity:1});
+    cart.push({...product, quantity: 1});
   }
 
   saveCart();
@@ -54,11 +100,8 @@ function addToCart(id) {
 }
 
 function updateCart() {
-  const count = cart.reduce(
-    (total, item) => total + item.quantity, 0
-  );
-
-  document.getElementById("cart-count").textContent = count;
+  document.getElementById("cart-count").textContent =
+    cart.reduce((total, item) => total + item.quantity, 0);
 
   const cartItems = document.getElementById("cart-items");
 
@@ -76,11 +119,10 @@ function updateCart() {
 
     return `
       <div class="product-card">
-        <h3>${item.icon} ${item.name}</h3>
+        <h3>${item.name}</h3>
         <p>Price: Rs. ${item.price.toLocaleString("en-PK")}</p>
         <p>Quantity: ${item.quantity}</p>
         <p>Subtotal: Rs. ${subtotal.toLocaleString("en-PK")}</p>
-
         <button onclick="changeQuantity(${item.id}, -1)">−</button>
         <button onclick="changeQuantity(${item.id}, 1)">+</button>
         <button onclick="removeFromCart(${item.id})">Remove</button>
@@ -94,7 +136,6 @@ function updateCart() {
 
 function changeQuantity(id, change) {
   const item = cart.find(p => p.id === id);
-
   if (!item) return;
 
   item.quantity += change;
@@ -126,87 +167,63 @@ function checkout() {
   }
 
   document.getElementById("checkout-section").style.display = "block";
-
   document.getElementById("checkout-section").scrollIntoView({
     behavior: "smooth"
   });
 }
 
-document.getElementById("checkout-form").addEventListener(
-  "submit",
-  function(event) {
-    event.preventDefault();
+document.getElementById("checkout-form").addEventListener("submit", function(event) {
+  event.preventDefault();
 
-    if (cart.length === 0) {
-      alert("Aapka cart khaali hai!");
-      return;
-    }
-
-    const customer = {
-      name: document.getElementById("customer-name").value.trim(),
-      phone: document.getElementById("customer-phone").value.trim(),
-      address: document.getElementById("customer-address").value.trim()
-    };
-
-    if (!customer.name || !customer.phone || !customer.address) {
-      alert("Please tamam details fill karein.");
-      return;
-    }
-
-    const total = cart.reduce(
-      (sum, item) => sum + item.price * item.quantity, 0
-    );
-
-    const order = {
-      orderNumber: "APB-" + Date.now(),
-      customer: customer,
-      products: [...cart],
-      total: total,
-      paymentMethod: "Cash on Delivery",
-      date: new Date().toLocaleString()
-    };
-
-    // Demo order browser mein save hota hai.
-    const orders = JSON.parse(
-      localStorage.getItem("apniPasandOrders") || "[]"
-    );
-
-    orders.push(order);
-
-    localStorage.setItem(
-      "apniPasandOrders",
-      JSON.stringify(orders)
-    );
-
-    alert(
-      "Order demo successfully place ho gaya!\n" +
-      "Order Number: " + order.orderNumber +
-      "\nTotal: Rs. " + total.toLocaleString("en-PK") +
-      "\nPayment: Cash on Delivery"
-    );
-
-    cart = [];
-    saveCart();
-    updateCart();
-
-    this.reset();
-
-    document.getElementById("checkout-section").style.display = "none";
+  if (cart.length === 0) {
+    alert("Cart khaali hai!");
+    return;
   }
-);
 
-// Product Search
+  const customer = {
+    name: document.getElementById("customer-name").value.trim(),
+    phone: document.getElementById("customer-phone").value.trim(),
+    address: document.getElementById("customer-address").value.trim()
+  };
+
+  const total = cart.reduce(
+    (sum, item) => sum + item.price * item.quantity, 0
+  );
+
+  const order = {
+    orderNumber: "APB-" + Date.now(),
+    customer,
+    products: [...cart],
+    total,
+    paymentMethod: "Cash on Delivery",
+    date: new Date().toLocaleString()
+  };
+
+  const orders = JSON.parse(
+    localStorage.getItem("apniPasandOrders") || "[]"
+  );
+
+  orders.push(order);
+  localStorage.setItem("apniPasandOrders", JSON.stringify(orders));
+
+  alert("Demo order placed!\nOrder Number: " + order.orderNumber);
+
+  cart = [];
+  saveCart();
+  updateCart();
+  this.reset();
+
+  document.getElementById("checkout-section").style.display = "none";
+});
+
 document.getElementById("search").addEventListener("input", function() {
   const query = this.value.toLowerCase();
 
-  const filtered = products.filter(product =>
+  displayProducts(products.filter(product =>
     product.name.toLowerCase().includes(query) ||
     product.category.toLowerCase().includes(query)
-  );
-
-  displayProducts(filtered);
+  ));
 });
 
-// Website Start
 displayProducts(products);
 updateCart();
