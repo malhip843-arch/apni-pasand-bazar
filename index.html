@@ -1,13 +1,60 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apni Pasand Bazar</title>
+  <link rel="stylesheet" href="style.css">
 </head>
 <body>
-  <h1>Apni Pasand Bazar</h1>
-  <p>Welcome to Pakistan's Online Shopping Store!</p>
+
+<header>
+  <h1>APNI PASAND BAZAR</h1>
+  <p>Har cheez, aik hi jagah!</p>
+  <input type="search" id="search" placeholder="Search products...">
+  <button onclick="showCart()">🛒 Cart (<span id="cart-count">0</span>)</button>
+</header>
+
+<nav>
+  <a href="#">Home</a>
+  <a href="#categories">Categories</a>
+  <a href="#products">Products</a>
+  <a href="#contact">Contact</a>
+</nav>
+
+<section class="hero">
+  <h2>Welcome to Apni Pasand Bazar</h2>
   <p>Pakistan ki online shopping ki aik jagah.</p>
+  <a href="#products" class="shop-btn">Shop Now</a>
+</section>
+
+<section id="categories">
+  <h2>Shop by Categories</h2>
+  <div class="categories">
+    <div>👕 Fashion</div>
+    <div>📱 Electronics</div>
+    <div>👟 Shoes</div>
+    <div>💄 Beauty</div>
+    <div>🏠 Home</div>
+    <div>🛒 Grocery</div>
+  </div>
+</section>
+
+<section id="products">
+  <h2>Our Products</h2>
+  <div id="product-list" class="products"></div>
+</section>
+
+<section id="contact">
+  <h2>Contact Us</h2>
+  <p>Apni Pasand Bazar – Pakistan</p>
+</section>
+
+<footer>
+  <p>© 2026 Apni Pasand Bazar. All Rights Reserved.</p>
+</footer>
+
+<script src="script.js"></script>
 </body>
 </html>
