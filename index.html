@@ -5,13 +5,52 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Apni Pasand Bazar | Online Shopping Pakistan</title>
-  <link rel="stylesheet" href="style.css?v=4">
+  <link rel="stylesheet" href="style.css?v=5">
+
+  <style>
+    header {
+      position: relative;
+    }
+
+    .account-control {
+      position: absolute;
+      top: 15px;
+      right: 20px;
+    }
+
+    .account-control button,
+    .account-control a {
+      display: inline-block;
+      padding: 10px 16px;
+      background: #d4af37;
+      color: #080808;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      text-decoration: none;
+      cursor: pointer;
+    }
+
+    @media (max-width: 600px) {
+      .account-control {
+        position: static;
+        margin: 12px auto;
+        text-align: center;
+      }
+
+      header {
+        padding-top: 15px;
+      }
+    }
+  </style>
 </head>
 <body>
 
 <header>
   <h1>APNI PASAND BAZAR</h1>
   <p>Har cheez, aik hi jagah!</p>
+
+  <div class="account-control" id="account-control"></div>
 
   <div class="header-actions">
     <input type="search" id="search" placeholder="Search products...">
@@ -113,6 +152,37 @@
 </footer>
 
 <script src="script.js?v=4"></script>
+
+<script>
+function updateAccountButton() {
+  const area = document.getElementById("account-control");
+
+  let user = null;
+
+  try {
+    user = JSON.parse(
+      localStorage.getItem("apniPasandLoggedInUser")
+    );
+  } catch (error) {
+    user = null;
+  }
+
+  if (user && user.name) {
+    area.innerHTML = '<button onclick="customerLogout()">Logout</button>';
+  } else {
+    area.innerHTML = '<a href="account.html">Login / Signup</a>';
+  }
+}
+
+function customerLogout() {
+  localStorage.removeItem("apniPasandLoggedInUser");
+  updateAccountButton();
+  alert("You have been logged out successfully!");
+  window.location.href = "account.html";
+}
+
+updateAccountButton();
+</script>
 
 </body>
 </html>
