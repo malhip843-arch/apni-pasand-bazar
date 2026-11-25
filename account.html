@@ -69,30 +69,20 @@
 
   <div id="signup-form">
     <h2>Create Account</h2>
-
     <input type="text" id="signup-name" placeholder="Full Name">
     <input type="email" id="signup-email" placeholder="Email Address">
     <input type="password" id="signup-password" placeholder="Create Password">
     <input type="password" id="signup-confirm" placeholder="Confirm Password">
-
     <button onclick="signup()">Create Account</button>
-
-    <p>Already have an account?
-      <a onclick="showLogin()">Login</a>
-    </p>
+    <p>Already have an account? <a onclick="showLogin()">Login</a></p>
   </div>
 
   <div id="login-form" class="hidden">
     <h2>Customer Login</h2>
-
     <input type="email" id="login-email" placeholder="Email Address">
     <input type="password" id="login-password" placeholder="Password">
-
     <button onclick="login()">Login</button>
-
-    <p>Don't have an account?
-      <a onclick="showSignup()">Create Account</a>
-    </p>
+    <p>Don't have an account? <a onclick="showSignup()">Create Account</a></p>
   </div>
 
   <div id="welcome-box" class="hidden">
@@ -102,7 +92,6 @@
   </div>
 
   <p id="account-message"></p>
-
   <p><a href="index.html">Back to Home</a></p>
 </div>
 
@@ -159,10 +148,11 @@ function signup() {
   users.push({ name, email, password });
   localStorage.setItem("apniPasandUsers", JSON.stringify(users));
 
-  message.textContent = "Account created! Please login.";
   document.getElementById("signup-password").value = "";
   document.getElementById("signup-confirm").value = "";
   showLogin();
+  document.getElementById("account-message").textContent =
+    "Account created! Please login.";
 }
 
 function login() {
@@ -185,16 +175,11 @@ function login() {
     email: user.email
   }));
 
-  showWelcome(user);
-}
+  message.textContent = "Login successful! Redirecting to Home Page...";
 
-function showWelcome(user) {
-  document.getElementById("signup-form").classList.add("hidden");
-  document.getElementById("login-form").classList.add("hidden");
-  document.getElementById("welcome-box").classList.remove("hidden");
-  document.getElementById("welcome-name").textContent =
-    "Hello, " + user.name + "! You are logged in.";
-  document.getElementById("account-message").textContent = "";
+  setTimeout(function() {
+    window.location.href = "index.html";
+  }, 1000);
 }
 
 function logout() {
@@ -209,7 +194,7 @@ try {
   );
 
   if (savedUser && savedUser.name) {
-    showWelcome(savedUser);
+    window.location.href = "index.html";
   }
 } catch (error) {
   localStorage.removeItem("apniPasandLoggedInUser");
