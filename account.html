@@ -1,0 +1,220 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Customer Account - Apni Pasand Bazar</title>
+  <link rel="stylesheet" href="style.css?v=4">
+  <style>
+    .account-box {
+      max-width: 430px;
+      margin: 50px auto;
+      padding: 30px;
+      background: #1b1b1b;
+      border: 1px solid #d4af37;
+      border-radius: 12px;
+    }
+    .account-box h2 {
+      color: #d4af37;
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .account-box input {
+      width: 100%;
+      padding: 13px;
+      margin: 10px 0;
+      border: 1px solid #555;
+      border-radius: 6px;
+      background: #292929;
+      color: white;
+    }
+    .account-box button {
+      width: 100%;
+      padding: 13px;
+      margin-top: 12px;
+      background: #d4af37;
+      color: black;
+      border: none;
+      border-radius: 6px;
+      font-weight: bold;
+      cursor: pointer;
+    }
+    .account-box p {
+      text-align: center;
+      margin-top: 18px;
+    }
+    .account-box a {
+      color: #d4af37;
+      cursor: pointer;
+    }
+    #account-message {
+      color: #d4af37;
+      text-align: center;
+      margin-top: 15px;
+    }
+    .hidden {
+      display: none;
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <h1>APNI PASAND BAZAR</h1>
+  <p>Customer Account</p>
+</header>
+
+<div class="account-box">
+
+  <div id="signup-form">
+    <h2>Create Account</h2>
+
+    <input type="text" id="signup-name" placeholder="Full Name">
+    <input type="email" id="signup-email" placeholder="Email Address">
+    <input type="password" id="signup-password" placeholder="Create Password">
+    <input type="password" id="signup-confirm" placeholder="Confirm Password">
+
+    <button onclick="signup()">Create Account</button>
+
+    <p>Already have an account?
+      <a onclick="showLogin()">Login</a>
+    </p>
+  </div>
+
+  <div id="login-form" class="hidden">
+    <h2>Customer Login</h2>
+
+    <input type="email" id="login-email" placeholder="Email Address">
+    <input type="password" id="login-password" placeholder="Password">
+
+    <button onclick="login()">Login</button>
+
+    <p>Don't have an account?
+      <a onclick="showSignup()">Create Account</a>
+    </p>
+  </div>
+
+  <div id="welcome-box" class="hidden">
+    <h2>Welcome!</h2>
+    <p id="welcome-name"></p>
+    <button onclick="logout()">Logout</button>
+  </div>
+
+  <p id="account-message"></p>
+
+  <p><a href="index.html">Back to Home</a></p>
+</div>
+
+<script>
+function getUsers() {
+  try {
+    return JSON.parse(localStorage.getItem("apniPasandUsers")) || [];
+  } catch (error) {
+    return [];
+  }
+}
+
+function showSignup() {
+  document.getElementById("signup-form").classList.remove("hidden");
+  document.getElementById("login-form").classList.add("hidden");
+  document.getElementById("account-message").textContent = "";
+}
+
+function showLogin() {
+  document.getElementById("login-form").classList.remove("hidden");
+  document.getElementById("signup-form").classList.add("hidden");
+  document.getElementById("account-message").textContent = "";
+}
+
+function signup() {
+  const name = document.getElementById("signup-name").value.trim();
+  const email = document.getElementById("signup-email").value.trim().toLowerCase();
+  const password = document.getElementById("signup-password").value;
+  const confirm = document.getElementById("signup-confirm").value;
+  const message = document.getElementById("account-message");
+
+  if (!name || !email || !password || !confirm) {
+    message.textContent = "Please fill all fields.";
+    return;
+  }
+
+  if (password.length < 6) {
+    message.textContent = "Password must be at least 6 characters.";
+    return;
+  }
+
+  if (password !== confirm) {
+    message.textContent = "Passwords do not match.";
+    return;
+  }
+
+  const users = getUsers();
+
+  if (users.some(user => user.email === email)) {
+    message.textContent = "This email is already registered.";
+    return;
+  }
+
+  users.push({ name, email, password });
+  localStorage.setItem("apniPasandUsers", JSON.stringify(users));
+
+  message.textContent = "Account created! Please login.";
+  document.getElementById("signup-password").value = "";
+  document.getElementById("signup-confirm").value = "";
+  showLogin();
+}
+
+function login() {
+  const email = document.getElementById("login-email").value.trim().toLowerCase();
+  const password = document.getElementById("login-password").value;
+  const message = document.getElementById("account-message");
+
+  const users = getUsers();
+  const user = users.find(item =>
+    item.email === email && item.password === password
+  );
+
+  if (!user) {
+    message.textContent = "Invalid email or password.";
+    return;
+  }
+
+  localStorage.setItem("apniPasandLoggedInUser", JSON.stringify({
+    name: user.name,
+    email: user.email
+  }));
+
+  showWelcome(user);
+}
+
+function showWelcome(user) {
+  document.getElementById("signup-form").classList.add("hidden");
+  document.getElementById("login-form").classList.add("hidden");
+  document.getElementById("welcome-box").classList.remove("hidden");
+  document.getElementById("welcome-name").textContent =
+    "Hello, " + user.name + "! You are logged in.";
+  document.getElementById("account-message").textContent = "";
+}
+
+function logout() {
+  localStorage.removeItem("apniPasandLoggedInUser");
+  document.getElementById("welcome-box").classList.add("hidden");
+  showLogin();
+}
+
+try {
+  const savedUser = JSON.parse(
+    localStorage.getItem("apniPasandLoggedInUser")
+  );
+
+  if (savedUser && savedUser.name) {
+    showWelcome(savedUser);
+  }
+} catch (error) {
+  localStorage.removeItem("apniPasandLoggedInUser");
+}
+</script>
+
+</body>
+</html>
